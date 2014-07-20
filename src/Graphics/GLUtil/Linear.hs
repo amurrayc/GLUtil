@@ -43,17 +43,26 @@ UNIFORMVEC(2)
 UNIFORMVEC(3)
 UNIFORMVEC(4)
 
+-- GLES doesn't allow passing transposed matrices as uniforms
+#ifdef GLES
+#define MAT (adjoint m)
+#define TRANS 0
+#else
+#define MAT m
+#define TRANS 1
+#endif
+
 instance AsUniform (M22 GLfloat) where
-  m `asUniform` loc = with m
-                    $ glUniformMatrix2fv (getUL loc) 1 1 . castMatComponent
+  m `asUniform` loc = with MAT
+                    $ glUniformMatrix2fv (getUL loc) 1 TRANS . castMatComponent
 
 instance AsUniform (M33 GLfloat) where
-  m `asUniform` loc = with m
-                    $ glUniformMatrix3fv (getUL loc) 1 1 . castMatComponent
+  m `asUniform` loc = with MAT
+                    $ glUniformMatrix3fv (getUL loc) 1 TRANS . castMatComponent
 
 instance AsUniform (M44 GLfloat) where
-  m `asUniform` loc = with m
-                    $ glUniformMatrix4fv (getUL loc) 1 1 . castMatComponent
+  m `asUniform` loc = with MAT
+                    $ glUniformMatrix4fv (getUL loc) 1 TRANS . castMatComponent
 
 -- Support lists of vectors as uniform arrays of vectors.
 

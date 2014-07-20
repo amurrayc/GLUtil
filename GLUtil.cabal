@@ -58,3 +58,5 @@ Library
   Build-tools:         cpphs
   GHC-Options:         -Odph -Wall
   HS-Source-Dirs:      src
+  if os(ios)
+    cpp-options: "-DGLES"
